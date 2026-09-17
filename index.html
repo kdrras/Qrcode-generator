@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>QR Lab — Professional QR Code Generator</title>
+<meta name="description" content="Generate URL, text, Wi-Fi and phone QR codes in your browser. No backend, no tracking." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="app">
+
+  <header class="topbar">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect x="2" y="2" width="11" height="11" rx="3" fill="url(#gradMark)"/>
+        <rect x="19" y="2" width="11" height="11" rx="3" fill="url(#gradMark)" opacity="0.55"/>
+        <rect x="2" y="19" width="11" height="11" rx="3" fill="url(#gradMark)" opacity="0.55"/>
+        <rect x="19" y="19" width="11" height="11" rx="3" fill="url(#gradMark)" opacity="0.85"/>
+        <defs>
+          <linearGradient id="gradMark" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+            <stop stop-color="var(--accent-1)"/>
+            <stop offset="1" stop-color="var(--accent-2)"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <div class="brand-text">
+        <p class="brand-name">QR Lab</p>
+        <p class="brand-tag">Professional QR Code Generator</p>
+      </div>
+    </div>
+
+    <nav class="tabs" role="tablist" aria-label="Main navigation">
+      <button class="tab active" data-view="generator" role="tab" aria-selected="true" id="tab-generator">Generator</button>
+      <button class="tab" data-view="history" role="tab" aria-selected="false" id="tab-history">History</button>
+      <button class="tab" data-view="about" role="tab" aria-selected="false" id="tab-about">About</button>
+    </nav>
+
+    <button class="theme-toggle" id="themeToggle" aria-label="Switch to dark mode" title="Toggle theme">
+      <svg class="icon icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <circle cx="12" cy="12" r="4.2"></circle>
+        <path d="M12 2.5v2.4M12 19.1v2.4M4.4 4.4l1.7 1.7M17.9 17.9l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.4 19.6l1.7-1.7M17.9 6.1l1.7-1.7"></path>
+      </svg>
+      <svg class="icon icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"></path>
+      </svg>
+    </button>
+  </header>
+
+  <main>
+
+    <!-- GENERATOR VIEW -->
+    <section id="view-generator" class="view active">
+      <div class="workspace">
+
+        <div class="panel settings-panel">
+
+          <div class="field-group">
+            <span class="field-label">Type</span>
+            <div class="segmented" id="typeSelector">
+              <button type="button" class="seg-btn active" data-type="url">URL</button>
+              <button type="button" class="seg-btn" data-type="text">Text</button>
+              <button type="button" class="seg-btn" data-type="wifi">Wi-Fi</button>
+              <button type="button" class="seg-btn" data-type="phone">Phone</button>
+            </div>
+          </div>
+
+          <div class="field-group input-group" id="input-url">
+            <label class="field-label" for="urlInput">Content</label>
+            <input type="url" id="urlInput" class="text-input" placeholder="https://example.com" autocomplete="off" />
+            <p class="field-error" id="error-url"></p>
+          </div>
+
+          <div class="field-group input-group hidden" id="input-text">
+            <label class="field-label" for="textInput">Content</label>
+            <textarea id="textInput" class="text-input textarea" rows="3" placeholder="Enter your content…"></textarea>
+            <p class="field-error" id="error-text"></p>
+          </div>
+
+          <div class="field-group input-group hidden" id="input-wifi">
+            <label class="field-label">Wi-Fi details</label>
+            <input type="text" id="wifiSsid" class="text-input" placeholder="Network name" autocomplete="off" />
+            <input type="text" id="wifiPassword" class="text-input" placeholder="Password" autocomplete="off" />
+            <div class="wifi-row">
+              <select id="wifiEncryption" class="select-input">
+                <option value="WPA">WPA / WPA2</option>
+                <option value="WEP">WEP</option>
+                <option value="nopass">None</option>
+              </select>
+              <label class="checkbox-label">
+                <input type="checkbox" id="wifiHidden" />
+                <span>Hidden network</span>
+              </label>
+            </div>
+            <p class="field-error" id="error-wifi"></p>
+          </div>
+
+          <div class="field-group input-group hidden" id="input-phone">
+            <label class="field-label" for="phoneInput">Phone number</label>
+            <input type="tel" id="phoneInput" class="text-input" placeholder="+1 234 567 8900" autocomplete="off" />
+            <p class="field-error" id="error-phone"></p>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="field-row">
+            <div class="field-group half">
+              <label class="field-label" for="qrColor">QR color</label>
+              <div class="color-field">
+                <input type="color" id="qrColor" value="#4F6DF5" />
+                <span id="qrColorValue">#4F6DF5</span>
+              </div>
+            </div>
+            <div class="field-group half">
+              <label class="field-label" for="bgColor">Background</label>
+              <div class="color-field">
+                <input type="color" id="bgColor" value="#FFFFFF" />
+                <span id="bgColorValue">#FFFFFF</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="sizeSlider">Size <span id="sizeValue">320</span> px</label>
+            <input type="range" id="sizeSlider" class="slider" min="160" max="512" step="8" value="320" />
+          </div>
+
+          <div class="field-group">
+            <span class="field-label">Error correction</span>
+            <div class="segmented" id="eccSelector">
+              <button type="button" class="seg-btn" data-ecc="L">L</button>
+              <button type="button" class="seg-btn active" data-ecc="M">M</button>
+              <button type="button" class="seg-btn" data-ecc="Q">Q</button>
+              <button type="button" class="seg-btn" data-ecc="H">H</button>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <span class="field-label">Style</span>
+            <div class="segmented" id="styleSelector">
+              <button type="button" class="seg-btn active" data-style="square">Square</button>
+              <button type="button" class="seg-btn" data-style="rounded">Rounded</button>
+              <button type="button" class="seg-btn" data-style="dots">Dots</button>
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button type="button" class="btn btn-ghost" id="copyBtn">Copy content</button>
+            <button type="button" class="btn btn-ghost" id="resetBtn">Reset settings</button>
+          </div>
+
+        </div>
+
+        <div class="panel-stack">
+
+          <div class="panel preview-panel">
+            <div class="preview-canvas-wrap">
+              <div id="qrCanvas" class="qr-canvas"></div>
+              <div id="qrLoading" class="qr-loading hidden" aria-hidden="true">
+                <span class="spinner"></span>
+              </div>
+              <div id="qrEmpty" class="qr-empty">
+                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6">
+                  <rect x="6" y="6" width="14" height="14" rx="3"></rect>
+                  <rect x="28" y="6" width="14" height="14" rx="3"></rect>
+                  <rect x="6" y="28" width="14" height="14" rx="3"></rect>
+                  <path d="M28 30h6M28 36h10M40 30h2"></path>
+                </svg>
+                <p>Enter content on the left to generate your QR code</p>
+              </div>
+            </div>
+            <div class="download-row">
+              <button type="button" class="btn btn-primary" id="downloadPng" disabled>Download PNG</button>
+              <button type="button" class="btn btn-secondary" id="downloadSvg" disabled>Download SVG</button>
+            </div>
+          </div>
+
+          <div class="panel scan-test-panel">
+            <div class="scan-status">
+              <span class="status-dot" id="statusDot"></span>
+              <span id="statusText">Waiting for content</span>
+            </div>
+            <div class="scan-meta">
+              <div class="scan-meta-item"><span>Format</span><strong>QR Code</strong></div>
+              <div class="scan-meta-item"><span>Size</span><strong id="metaSize">320 × 320</strong></div>
+              <div class="scan-meta-item"><span>Error correction</span><strong id="metaEcc">M</strong></div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- HISTORY VIEW -->
+    <section id="view-history" class="view">
+      <div class="panel history-panel">
+        <div class="history-header">
+          <div>
+            <h2>History</h2>
+            <p class="panel-subtitle">Your last generated QR codes, stored locally on this device.</p>
+          </div>
+          <button type="button" class="btn btn-ghost" id="clearHistoryBtn">Clear all</button>
+        </div>
+        <div id="historyList" class="history-list"></div>
+        <div id="historyEmpty" class="history-empty">
+          <p>No QR codes yet — codes you generate will show up here.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT VIEW -->
+    <section id="view-about" class="view">
+      <div class="panel about-panel">
+        <h2>About QR Lab</h2>
+        <p>QR Lab is a lightweight, client-side QR code generator. Everything happens in your browser — nothing you type is sent anywhere.</p>
+        <div class="about-grid">
+          <div class="about-item">
+            <h3>URL &amp; Text</h3>
+            <p>Turn any link or block of text into a scannable code, updated as you type.</p>
+          </div>
+          <div class="about-item">
+            <h3>Wi-Fi</h3>
+            <p>Share network access with a single scan — no typing passwords by hand.</p>
+          </div>
+          <div class="about-item">
+            <h3>Phone</h3>
+            <p>Generate a code that opens the dialer with a number pre-filled.</p>
+          </div>
+          <div class="about-item">
+            <h3>Export</h3>
+            <p>Download finished codes as crisp PNG or scalable SVG, at any size.</p>
+          </div>
+        </div>
+        <p class="about-footnote">Built with HTML, CSS and vanilla JavaScript — no frameworks, no server, runs entirely on GitHub Pages.</p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+<script src="https://unpkg.com/qr-code-styling@1.9.2/lib/qr-code-styling.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
